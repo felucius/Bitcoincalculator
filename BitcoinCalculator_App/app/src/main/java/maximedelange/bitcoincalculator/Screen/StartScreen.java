@@ -1,6 +1,7 @@
 package maximedelange.bitcoincalculator.Screen;
 
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -8,10 +9,25 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.TextView;
 
+import maximedelange.bitcoincalculator.Domain.APICalls;
+import maximedelange.bitcoincalculator.Domain.Bitcoin;
 import maximedelange.bitcoincalculator.R;
 
 public class StartScreen extends AppCompatActivity {
+
+    // Fields
+    // Controlls
+    private TextView description = null;
+    private TextView value = null;
+    private TextView currency = null;
+    private TextView lastUpdated = null;
+
+    // Domain
+    private APICalls apiCalls = null;
+    private Bitcoin bitcoin = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,14 +36,8 @@ public class StartScreen extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        // Additions
+        refreshCurrencyStatistics();
     }
 
     @Override
@@ -50,5 +60,28 @@ public class StartScreen extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void refreshCurrencyStatistics(){
+        // Remove internet strictmode
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
+        apiCalls = new APICalls();
+        bitcoin = apiCalls.getJSONObject("https://api.coindesk.com/v1/bpi/currentprice.json");
+
+        updateLabels();
+    }
+
+    private void updateLabels(){
+        description = (TextView) findViewById(R.id.txtDescription);
+        value = (TextView) findViewById(R.id.txtValue);
+        currency = (TextView) findViewById(R.id.txtCurrency);
+        lastUpdated = (TextView) findViewById(R.id.txtLastUpdated);
+
+        description.setText(bitcoin.getDescription());
+        value.setText(bitcoin.getValue());
+        //currency.setText(bitcoin.getCurrency());
+        lastUpdated.setText("Last updated\n" + bitcoin.getLastUpdated());
     }
 }

@@ -11,6 +11,9 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by M on 9/2/2017.
@@ -23,6 +26,7 @@ public class APICalls {
     private BufferedReader reader = null;
     private StringBuilder stringBuilder = null;
     private Bitcoin bitcoin = null;
+    private List<String> bitcoinCurrencies = null;
 
     // Constructor
     public APICalls(){
@@ -30,8 +34,7 @@ public class APICalls {
     }
 
     // Methods
-    public Bitcoin getJSONObject(String url){
-        //JSONObject jsonObject = null;
+    public String getJSONObject(String url){
         try {
             this.url = new URL(url);
             urlConnection = (HttpURLConnection) this.url.openConnection();
@@ -52,8 +55,8 @@ public class APICalls {
             String JSONString = stringBuilder.toString();
             System.out.println(JSONString);
 
-            bitcoin = parseJSONObject(JSONString);
-            return bitcoin;
+            //bitcoin = parseJSONObject(JSONString);
+            return JSONString;
         }catch (MalformedURLException malformed){
             malformed.printStackTrace();
             return null;
@@ -83,6 +86,30 @@ public class APICalls {
             this.bitcoin = new Bitcoin(lastUpdated, currency, value, description);
 
             return bitcoin;
+        }catch (JSONException jsonEx){
+            jsonEx.printStackTrace();
+            return null;
+        }
+    }
+
+    public List<String> getBitcoinCurrencies(String json){
+        bitcoinCurrencies = new ArrayList<>();
+        List<String> holder = new ArrayList<>();
+        try {
+            JSONObject jsonObject = new JSONObject(json);
+
+            String previousCurrencies = jsonObject.getString("bpi");
+
+            holder = Arrays.asList(previousCurrencies.split(","));
+
+            for(String previousCurrency : holder){
+                if(this.bitcoin != null){
+                    bitcoinCurrencies.add(previousCurrency);
+                    bitcoin.setBitcoinCurrencies(bitcoinCurrencies);
+                }
+            }
+
+            return bitcoinCurrencies;
         }catch (JSONException jsonEx){
             jsonEx.printStackTrace();
             return null;

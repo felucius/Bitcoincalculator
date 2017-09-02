@@ -1,17 +1,22 @@
 package maximedelange.bitcoincalculator.Screen;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.Executor;
@@ -31,10 +36,13 @@ public class StartScreen extends AppCompatActivity {
     private TextView description = null;
     private TextView value = null;
     private TextView lastUpdated = null;
+    private FloatingActionButton btnGoTo = null;
+    private Spinner bitcoinStatistics = null;
 
     // Domain
     private APICalls apiCalls = null;
     private Bitcoin bitcoin = null;
+    private List<String> bitcoinCurrencies = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,10 +52,11 @@ public class StartScreen extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         // Additions
+        removeActionBar();
+        goToCalculator();
         apiCalls = new APICalls();
         updateMethodCall();
-        //refreshCurrencyStatistics();
-        //updateLabels();
+        getAllCurrencyRecords();
     }
 
     @Override
@@ -77,8 +86,24 @@ public class StartScreen extends AppCompatActivity {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
-        bitcoin = apiCalls.getJSONObject("https://api.coindesk.com/v1/bpi/currentprice.json");
+
+        String jsonObject = apiCalls.getJSONObject("https://api.coindesk.com/v1/bpi/currentprice.json");
+        bitcoin = apiCalls.parseJSONObject(jsonObject);
         updateLabels();
+    }
+
+    private void getAllCurrencyRecords(){
+        // Remove internet strictmode
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
+        String jsonObject = apiCalls.getJSONObject("https://api.coindesk.com/v1/bpi/historical/close.json");
+
+        List<String> currencies = apiCalls.getBitcoinCurrencies(jsonObject);
+
+        bitcoinStatistics = (Spinner) findViewById(R.id.spnBitcoinStatistics);
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, currencies);
+        bitcoinStatistics.setAdapter(arrayAdapter);
     }
 
     private void updateLabels(){
@@ -104,5 +129,21 @@ public class StartScreen extends AppCompatActivity {
                 refreshCurrencyStatistics();
             }
         }, 0, 5000); // initiate timer after 0 seconds and refreshes every 5 seconds.
+    }
+
+    private void removeActionBar(){
+        ActionBar actionBar = this.getSupportActionBar();
+        actionBar.hide();
+    }
+
+    private void goToCalculator(){
+        btnGoTo = (FloatingActionButton) findViewById(R.id.btnGoTo);
+        btnGoTo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), CalculatorScreen.class);
+                startActivity(intent);
+            }
+        });
     }
 }

@@ -1,5 +1,7 @@
 package maximedelange.bitcoincalculator.Domain;
 
+import java.util.List;
+
 /**
  * Created by M on 9/2/2017.
  */
@@ -10,6 +12,7 @@ public class Bitcoin {
     private String currency = null;
     private String value = null;
     private String description = null;
+    private List<String> bitcoinCurrencies = null;
 
     // Constructor
     public Bitcoin(String lastUpdated, String currency, String value, String description){
@@ -34,5 +37,13 @@ public class Bitcoin {
 
     public String getDescription(){
         return this.description;
+    }
+
+    public void setBitcoinCurrencies(List<String> bitcoinCurrencies){
+        this.bitcoinCurrencies = bitcoinCurrencies;
+    }
+
+    public List<String> getBitcoinCurrencies(){
+        return this.bitcoinCurrencies;
     }
 }

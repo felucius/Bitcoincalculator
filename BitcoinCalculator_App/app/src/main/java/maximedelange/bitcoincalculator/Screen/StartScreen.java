@@ -12,6 +12,14 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Handler;
+
 import maximedelange.bitcoincalculator.Domain.APICalls;
 import maximedelange.bitcoincalculator.Domain.Bitcoin;
 import maximedelange.bitcoincalculator.R;
@@ -22,7 +30,6 @@ public class StartScreen extends AppCompatActivity {
     // Controlls
     private TextView description = null;
     private TextView value = null;
-    private TextView currency = null;
     private TextView lastUpdated = null;
 
     // Domain
@@ -37,7 +44,10 @@ public class StartScreen extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         // Additions
-        refreshCurrencyStatistics();
+        apiCalls = new APICalls();
+        updateMethodCall();
+        //refreshCurrencyStatistics();
+        //updateLabels();
     }
 
     @Override
@@ -67,21 +77,32 @@ public class StartScreen extends AppCompatActivity {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
-        apiCalls = new APICalls();
         bitcoin = apiCalls.getJSONObject("https://api.coindesk.com/v1/bpi/currentprice.json");
-
         updateLabels();
     }
 
     private void updateLabels(){
         description = (TextView) findViewById(R.id.txtDescription);
         value = (TextView) findViewById(R.id.txtValue);
-        currency = (TextView) findViewById(R.id.txtCurrency);
         lastUpdated = (TextView) findViewById(R.id.txtLastUpdated);
 
-        description.setText(bitcoin.getDescription());
-        value.setText(bitcoin.getValue());
-        //currency.setText(bitcoin.getCurrency());
-        lastUpdated.setText("Last updated\n" + bitcoin.getLastUpdated());
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                description.setText(bitcoin.getDescription());
+                value.setText(bitcoin.getValue());
+                lastUpdated.setText("Last updated\n" + bitcoin.getLastUpdated());
+            }
+        });
+    }
+
+    private void updateMethodCall(){
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                refreshCurrencyStatistics();
+            }
+        }, 0, 5000); // initiate timer after 0 seconds and refreshes every 5 seconds.
     }
 }

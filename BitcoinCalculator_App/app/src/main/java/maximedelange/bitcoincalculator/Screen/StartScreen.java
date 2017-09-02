@@ -1,11 +1,13 @@
 package maximedelange.bitcoincalculator.Screen;
 
+import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -36,7 +38,8 @@ public class StartScreen extends AppCompatActivity {
     private TextView description = null;
     private TextView value = null;
     private TextView lastUpdated = null;
-    private FloatingActionButton btnGoTo = null;
+    private Button btnGoTo = null;
+    private Button showCurrencies = null;
     private Spinner bitcoinStatistics = null;
 
     // Domain
@@ -56,7 +59,8 @@ public class StartScreen extends AppCompatActivity {
         goToCalculator();
         apiCalls = new APICalls();
         updateMethodCall();
-        getAllCurrencyRecords();
+        //getAllCurrencyRecords();
+        retrieveBitcoinCurrencies();
     }
 
     @Override
@@ -98,12 +102,17 @@ public class StartScreen extends AppCompatActivity {
         StrictMode.setThreadPolicy(policy);
 
         String jsonObject = apiCalls.getJSONObject("https://api.coindesk.com/v1/bpi/historical/close.json");
-
         List<String> currencies = apiCalls.getBitcoinCurrencies(jsonObject);
 
-        bitcoinStatistics = (Spinner) findViewById(R.id.spnBitcoinStatistics);
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, currencies);
-        bitcoinStatistics.setAdapter(arrayAdapter);
+        StringBuilder sb = new StringBuilder();
+        for(String currency : currencies){
+            sb.append(currency + "\n");
+        }
+
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        dialog.setMessage(sb.toString());
+        dialog.setCancelable(true);
+        dialog.show();
     }
 
     private void updateLabels(){
@@ -136,8 +145,18 @@ public class StartScreen extends AppCompatActivity {
         actionBar.hide();
     }
 
+    private void retrieveBitcoinCurrencies(){
+        showCurrencies = (Button) findViewById(R.id.btnShowCurrencies);
+        showCurrencies.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getAllCurrencyRecords();
+            }
+        });
+    }
+
     private void goToCalculator(){
-        btnGoTo = (FloatingActionButton) findViewById(R.id.btnGoTo);
+        btnGoTo = (Button) findViewById(R.id.btnGoTo);
         btnGoTo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

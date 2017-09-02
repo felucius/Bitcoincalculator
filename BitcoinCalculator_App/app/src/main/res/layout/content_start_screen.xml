@@ -58,11 +58,25 @@
         android:id="@+id/linearLayout3"
         android:weightSum="1">
 
-        <Spinner
-            android:id="@+id/spnBitcoinStatistics"
+        <Button
+            android:id="@+id/btnShowCurrencies"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0.34" />
+            android:background="@android:color/holo_orange_dark"
+            android:text="Show currencies"
+            android:textAlignment="center"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btnGoTo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/holo_orange_dark"
+            android:text="Calculator"
+            android:textAlignment="center"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
     </LinearLayout>
 
@@ -83,21 +97,5 @@
         android:orientation="horizontal"
         tools:layout_editor_absoluteY="20dp"
         tools:layout_editor_absoluteX="0dp" />
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/btnGoTo"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:clickable="true"
-        android:visibility="visible"
-        app:backgroundTint="@android:color/holo_orange_dark"
-        app:elevation="24dp"
-        app:fabSize="mini"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout3"
-        app:layout_constraintVertical_bias="0.316"
-        app:layout_constraintRight_toLeftOf="@+id/linearLayout3"
-        app:layout_constraintLeft_toRightOf="@+id/linearLayout3"
-        app:layout_constraintHorizontal_bias="0.226" />
 
 </android.support.constraint.ConstraintLayout>

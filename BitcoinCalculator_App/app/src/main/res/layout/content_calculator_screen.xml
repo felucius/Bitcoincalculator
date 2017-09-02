@@ -91,7 +91,7 @@
             android:id="@+id/button2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:background="@android:color/holo_orange_dark"
             android:text="Calculate"
             android:textAlignment="center"
             android:textSize="18sp"

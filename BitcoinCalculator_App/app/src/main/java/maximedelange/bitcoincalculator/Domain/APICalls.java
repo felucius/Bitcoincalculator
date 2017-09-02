@@ -102,12 +102,13 @@ public class APICalls {
 
             holder = Arrays.asList(previousCurrencies.split(","));
 
-            for(String previousCurrency : holder){
+            for(int i = 0; i < holder.size(); i++){
                 if(this.bitcoin != null){
-                    bitcoinCurrencies.add(previousCurrency);
-                    bitcoin.setBitcoinCurrencies(bitcoinCurrencies);
+                    bitcoinCurrencies.add(holder.get(i));
                 }
             }
+            bitcoin.setBitcoinCurrencies(bitcoinCurrencies);
+            //bitcoinCurrencies.add("Next currency will display tomorrow.");
 
             return bitcoinCurrencies;
         }catch (JSONException jsonEx){

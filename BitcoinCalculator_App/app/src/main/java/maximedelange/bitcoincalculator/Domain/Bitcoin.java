@@ -13,6 +13,7 @@ public class Bitcoin {
     private String value = null;
     private String description = null;
     private List<String> bitcoinCurrencies = null;
+    private String previousCurrencyDate = null;
 
     // Constructor
     public Bitcoin(String lastUpdated, String currency, String value, String description){
@@ -45,5 +46,13 @@ public class Bitcoin {
 
     public List<String> getBitcoinCurrencies(){
         return this.bitcoinCurrencies;
+    }
+
+    public void setPreviousCurrencyDate(String previousCurrencyDate){
+        this.previousCurrencyDate = previousCurrencyDate;
+    }
+
+    public String getPreviousCurrencyDate(){
+        return this.previousCurrencyDate;
     }
 }

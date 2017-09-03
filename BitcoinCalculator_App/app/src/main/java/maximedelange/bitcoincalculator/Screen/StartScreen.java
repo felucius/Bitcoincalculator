@@ -15,9 +15,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -40,11 +43,12 @@ public class StartScreen extends AppCompatActivity {
     private TextView lastUpdated = null;
     private Button btnGoTo = null;
     private Button showCurrencies = null;
-    private Spinner bitcoinStatistics = null;
+    private ToggleButton toggleCurrency = null;
 
     // Domain
     private APICalls apiCalls = null;
     private Bitcoin bitcoin = null;
+    private List<Bitcoin> bitcoinList = null;
     private List<String> bitcoinCurrencies = null;
 
     @Override
@@ -61,6 +65,7 @@ public class StartScreen extends AppCompatActivity {
         updateMethodCall();
         //getAllCurrencyRecords();
         retrieveBitcoinCurrencies();
+        toggleCurrentCurrency();
     }
 
     @Override
@@ -90,10 +95,15 @@ public class StartScreen extends AppCompatActivity {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
-
+        bitcoinList = new ArrayList<>();
         String jsonObject = apiCalls.getJSONObject("https://api.coindesk.com/v1/bpi/currentprice.json");
-        bitcoin = apiCalls.parseJSONObject(jsonObject);
-        updateLabels();
+        bitcoinList = apiCalls.parseJSONObject(jsonObject);
+        //updateLabels(0);
+        if(toggleCurrency.getText().equals("Currency USD")){
+            updateLabels(0);
+        }else{
+            updateLabels(1);
+        }
     }
 
     private void getAllCurrencyRecords(){
@@ -115,19 +125,34 @@ public class StartScreen extends AppCompatActivity {
         dialog.show();
     }
 
-    private void updateLabels(){
+    private void updateLabels(final int number){
+        final int numberHolder = number;
+
         description = (TextView) findViewById(R.id.txtDescription);
         value = (TextView) findViewById(R.id.txtValue);
         lastUpdated = (TextView) findViewById(R.id.txtLastUpdated);
 
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                description.setText(bitcoin.getDescription());
-                value.setText(bitcoin.getValue());
-                lastUpdated.setText("Last updated\n" + bitcoin.getLastUpdated());
-            }
-        });
+        if(bitcoinList.size() > 0){
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if(number == 0){
+                        description.setText(bitcoinList.get(numberHolder).getDescription());
+                        value.setText(bitcoinList.get(numberHolder).getValue());
+                        lastUpdated.setText("Last updated\n" + bitcoinList.get(numberHolder).getLastUpdated());
+                    }else if(number == 1){
+                        description.setText(bitcoinList.get(numberHolder).getDescription());
+                        value.setText(bitcoinList.get(numberHolder).getValue());
+                        lastUpdated.setText("Last updated\n" + bitcoinList.get(numberHolder).getLastUpdated());
+                    }else{
+                        System.out.println("No number matches the description");
+                    }
+                }
+            });
+        }else{
+            System.out.println("Bitcoin list is empty");
+        }
+
     }
 
     private void updateMethodCall(){
@@ -162,6 +187,21 @@ public class StartScreen extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(), CalculatorScreen.class);
                 startActivity(intent);
+            }
+        });
+    }
+
+    private void toggleCurrentCurrency(){
+        toggleCurrency = (ToggleButton) findViewById(R.id.btnToggleCurrency);
+        toggleCurrency.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    // The toggle is enabled
+                    updateLabels(0);
+                } else {
+                    // The toggle is disabled
+                    updateLabels(1);
+                }
             }
         });
     }

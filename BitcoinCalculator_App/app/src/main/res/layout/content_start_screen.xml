@@ -89,6 +89,26 @@
         tools:layout_editor_absoluteY="302dp">
 
         <View
+            android:id="@+id/view6"
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:background="@android:color/background_dark" />
+
+        <ToggleButton
+            android:id="@+id/btnToggleCurrency"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/holo_orange_dark"
+            android:checked="false"
+            android:text="ToggleButton"
+            android:textAlignment="center"
+            android:textColor="@android:color/black"
+            android:textOff="Currency USD"
+            android:textOn="Currency EUR"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <View
             android:id="@+id/view1"
             android:layout_width="match_parent"
             android:layout_height="2px"

@@ -27,6 +27,7 @@ public class APICalls {
     private StringBuilder stringBuilder = null;
     private Bitcoin bitcoin = null;
     private List<String> bitcoinCurrencies = null;
+    private List<Bitcoin> bitcoinList = null;
 
     // Constructor
     public APICalls(){
@@ -69,7 +70,8 @@ public class APICalls {
         }
     }
 
-    public Bitcoin parseJSONObject(String json){
+    public List<Bitcoin> parseJSONObject(String json){
+        bitcoinList = new ArrayList<>();
         try{
             JSONObject jsonObject = new JSONObject(json);
 
@@ -77,15 +79,22 @@ public class APICalls {
             String lastUpdated = lastUpdatedObject.getString("updated");
 
             JSONObject bitcoinObject = jsonObject.getJSONObject("bpi");
-            JSONObject bitcoinCurrency = bitcoinObject.getJSONObject("USD");
-            String currency = bitcoinCurrency.getString("code");
-            String value = bitcoinCurrency.getString("rate");
-            String description = bitcoinCurrency.getString("description");
+            JSONObject bitcoinCurrencyUSD = bitcoinObject.getJSONObject("USD");
+            String currencyUSD = bitcoinCurrencyUSD.getString("code");
+            String valueUSD = bitcoinCurrencyUSD.getString("rate");
+            String descriptionUSD = bitcoinCurrencyUSD.getString("description");
 
+            JSONObject bitcoinCurrencyEUR = bitcoinObject.getJSONObject("EUR");
+            String curencyEUR = bitcoinCurrencyEUR.getString("code");
+            String valueEUR = bitcoinCurrencyEUR.getString("rate");
+            String descriptionEUR = bitcoinCurrencyEUR.getString("description");
 
-            this.bitcoin = new Bitcoin(lastUpdated, currency, value, description);
+            this.bitcoin = new Bitcoin(lastUpdated, currencyUSD, valueUSD, descriptionUSD);
+            bitcoinList.add(bitcoin);
+            this.bitcoin = new Bitcoin(lastUpdated, curencyEUR, valueEUR, descriptionEUR);
+            bitcoinList.add(bitcoin);
 
-            return bitcoin;
+            return bitcoinList;
         }catch (JSONException jsonEx){
             jsonEx.printStackTrace();
             return null;
@@ -102,13 +111,14 @@ public class APICalls {
 
             holder = Arrays.asList(previousCurrencies.split(","));
 
+
+
             for(int i = 0; i < holder.size(); i++){
                 if(this.bitcoin != null){
                     bitcoinCurrencies.add(holder.get(i));
                 }
             }
             bitcoin.setBitcoinCurrencies(bitcoinCurrencies);
-            //bitcoinCurrencies.add("Next currency will display tomorrow.");
 
             return bitcoinCurrencies;
         }catch (JSONException jsonEx){

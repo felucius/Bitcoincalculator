@@ -1,5 +1,6 @@
 package maximedelange.bitcoincalculator.Screen;
 
+import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
@@ -120,13 +121,21 @@ public class StartScreen extends AppCompatActivity {
         StringBuilder sb = new StringBuilder();
         for(Map.Entry<Integer, Bitcoin> currency : currencies.entrySet()){
             sb.append("Date: " + currency.getValue().getLastUpdated()
-                    + " Dollar value: " + currency.getValue().getValue() + "\n");
+                    + "\n" + "Dollar value: " + currency.getValue().getValue() + "\n\n");
         }
 
+        Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.previous_currencies_dialog);
+        TextView txt = (TextView) dialog.findViewById(R.id.textCurrencies);
+        txt.setText(sb.toString());
+        dialog.show();
+
+        /*
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         dialog.setMessage(sb.toString());
         dialog.setCancelable(true);
         dialog.show();
+        */
     }
 
     private void updateLabels(final int number){

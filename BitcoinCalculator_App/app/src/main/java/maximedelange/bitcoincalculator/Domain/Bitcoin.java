@@ -1,6 +1,8 @@
 package maximedelange.bitcoincalculator.Domain;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.TreeMap;
 
 /**
  * Created by M on 9/2/2017.
@@ -12,7 +14,7 @@ public class Bitcoin {
     private String currency = null;
     private String value = null;
     private String description = null;
-    private List<String> bitcoinCurrencies = null;
+    private TreeMap<Integer, Bitcoin> bitcoinCurrencies = null;
     private String previousCurrencyDate = null;
 
     // Constructor
@@ -40,11 +42,11 @@ public class Bitcoin {
         return this.description;
     }
 
-    public void setBitcoinCurrencies(List<String> bitcoinCurrencies){
+    public void setBitcoinCurrencies(TreeMap<Integer, Bitcoin> bitcoinCurrencies){
         this.bitcoinCurrencies = bitcoinCurrencies;
     }
 
-    public List<String> getBitcoinCurrencies(){
+    public TreeMap<Integer, Bitcoin> getBitcoinCurrencies(){
         return this.bitcoinCurrencies;
     }
 

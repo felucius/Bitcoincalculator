@@ -21,9 +21,12 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.TreeMap;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -98,7 +101,7 @@ public class StartScreen extends AppCompatActivity {
         bitcoinList = new ArrayList<>();
         String jsonObject = apiCalls.getJSONObject("https://api.coindesk.com/v1/bpi/currentprice.json");
         bitcoinList = apiCalls.parseJSONObject(jsonObject);
-        //updateLabels(0);
+
         if(toggleCurrency.getText().equals("Currency USD")){
             updateLabels(0);
         }else{
@@ -112,11 +115,12 @@ public class StartScreen extends AppCompatActivity {
         StrictMode.setThreadPolicy(policy);
 
         String jsonObject = apiCalls.getJSONObject("https://api.coindesk.com/v1/bpi/historical/close.json");
-        List<String> currencies = apiCalls.getBitcoinCurrencies(jsonObject);
+        TreeMap<Integer, Bitcoin> currencies = apiCalls.getBitcoinCurrencies(jsonObject);
 
         StringBuilder sb = new StringBuilder();
-        for(String currency : currencies){
-            sb.append(currency + "\n");
+        for(Map.Entry<Integer, Bitcoin> currency : currencies.entrySet()){
+            sb.append("Date: " + currency.getValue().getLastUpdated()
+                    + " Dollar value: " + currency.getValue().getValue() + "\n");
         }
 
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);

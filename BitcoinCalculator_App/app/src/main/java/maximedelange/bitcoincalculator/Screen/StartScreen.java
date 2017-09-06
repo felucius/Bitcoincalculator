@@ -53,6 +53,7 @@ public class StartScreen extends AppCompatActivity {
     private APICalls apiCalls = null;
     private Bitcoin bitcoin = null;
     private List<Bitcoin> bitcoinList = null;
+    private boolean currencyChecker = false;
     private List<String> bitcoinCurrencies = null;
 
     @Override
@@ -104,8 +105,10 @@ public class StartScreen extends AppCompatActivity {
         bitcoinList = apiCalls.parseJSONObject(jsonObject);
 
         if(toggleCurrency.getText().equals("Currency USD")){
+            // Display value in dollars.
             updateLabels(0);
         }else{
+            // Display value in euros.
             updateLabels(1);
         }
     }
@@ -115,27 +118,43 @@ public class StartScreen extends AppCompatActivity {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
-        String jsonObject = apiCalls.getJSONObject("https://api.coindesk.com/v1/bpi/historical/close.json");
-        TreeMap<Integer, Bitcoin> currencies = apiCalls.getBitcoinCurrencies(jsonObject);
+        // API call to retrieve default value in dollars.
+        String jsonDollarObject = apiCalls.getJSONObject("https://api.coindesk.com/v1/bpi/historical/close.json");
+        // API call to retrieve value in euros.
+        String jsonEuroObject = apiCalls.getJSONObject("https://api.coindesk.com/v1/bpi/historical/close.json?currency=EUR");
+        // Adding dollar currencies from API to a sorted map (TreeMap).
+        TreeMap<Integer, Bitcoin> dollarCurrencies = apiCalls.getBitcoinCurrencies(jsonDollarObject);
+        // Adding euro currencies from API to a sorted map (TreeMap).
+        TreeMap<Integer, Bitcoin> euroCurrencies = apiCalls.getBitcoinCurrencies(jsonEuroObject);
 
-        StringBuilder sb = new StringBuilder();
-        for(Map.Entry<Integer, Bitcoin> currency : currencies.entrySet()){
-            sb.append("Date: " + currency.getValue().getLastUpdated()
+        // Adding dollar value to the stringbuilder.
+        StringBuilder sbDollars = new StringBuilder();
+        for(Map.Entry<Integer, Bitcoin> currency : dollarCurrencies.entrySet()){
+            sbDollars.append("Date: " + currency.getValue().getLastUpdated()
                     + "\n" + "Dollar value: " + currency.getValue().getValue() + "\n\n");
         }
 
+        // Adding euro values to the stringbuilder.
+        StringBuilder sbEuros = new StringBuilder();
+        for(Map.Entry<Integer, Bitcoin> currency : euroCurrencies.entrySet()){
+            sbEuros.append("Date: " + currency.getValue().getLastUpdated()
+            + "\n" + "Euro value: " + currency.getValue().getValue() + "\n\n");
+        }
+
+        // Custom dialog that displays the previous currencies.
         Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.previous_currencies_dialog);
         TextView txt = (TextView) dialog.findViewById(R.id.textCurrencies);
-        txt.setText(sb.toString());
-        dialog.show();
 
-        /*
-        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-        dialog.setMessage(sb.toString());
-        dialog.setCancelable(true);
+        // Checking currency. For default currency (which is false) displays all currencies in dollars.
+        if(currencyChecker){
+            // Display all previous currencies in dollars.
+            txt.setText(sbEuros.toString());
+        }else{
+            // Display all previous currencies in euros.
+            txt.setText(sbDollars.toString());
+        }
         dialog.show();
-        */
     }
 
     private void updateLabels(final int number){
@@ -210,10 +229,14 @@ public class StartScreen extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     // The toggle is enabled
+                    // Value displayed in dollars.
                     updateLabels(0);
+                    currencyChecker = true;
                 } else {
                     // The toggle is disabled
+                    // Value displayed in euros.
                     updateLabels(1);
+                    currencyChecker = false;
                 }
             }
         });

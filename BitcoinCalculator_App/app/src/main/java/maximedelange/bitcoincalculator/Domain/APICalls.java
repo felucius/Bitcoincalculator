@@ -92,8 +92,8 @@ public class APICalls {
             String descriptionEUR = bitcoinCurrencyEUR.getString("description");
 
             // Removing the comma from the price
-            String concatValueUSD = valueUSD.replace(",", ".");
-            String concatValueEUR = valueEUR.replace(",", ".");
+            String concatValueUSD = valueUSD.replace(",", "");
+            String concatValueEUR = valueEUR.replace(",", "");
             // Removing the last 4 digits of the value string. Last 4 digits are in cents and are not necessary.
             String actualValueUSD = concatValueUSD.substring(0, concatValueUSD.length() - 5);
             String actualValueEUR = concatValueEUR.substring(0, concatValueEUR.length() - 5);

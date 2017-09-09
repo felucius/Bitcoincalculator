@@ -35,6 +35,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Handler;
 
 import maximedelange.bitcoincalculator.Domain.APICalls;
+import maximedelange.bitcoincalculator.Domain.BackgroundService;
 import maximedelange.bitcoincalculator.Domain.Bitcoin;
 import maximedelange.bitcoincalculator.R;
 
@@ -47,6 +48,7 @@ public class StartScreen extends AppCompatActivity {
     private TextView lastUpdated = null;
     private Button btnGoTo = null;
     private Button showCurrencies = null;
+    private Button backgroundService = null;
     private ToggleButton toggleCurrency = null;
 
     // Domain
@@ -55,6 +57,7 @@ public class StartScreen extends AppCompatActivity {
     private List<Bitcoin> bitcoinList = null;
     private boolean currencyChecker = false;
     private List<String> bitcoinCurrencies = null;
+    private Integer numberHolder = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,9 +71,9 @@ public class StartScreen extends AppCompatActivity {
         goToCalculator();
         apiCalls = new APICalls();
         updateMethodCall();
-        //getAllCurrencyRecords();
         retrieveBitcoinCurrencies();
         toggleCurrentCurrency();
+        startBackgroundService();
     }
 
     @Override
@@ -158,7 +161,7 @@ public class StartScreen extends AppCompatActivity {
     }
 
     private void updateLabels(final int number){
-        final int numberHolder = number;
+        numberHolder = number;
 
         description = (TextView) findViewById(R.id.txtDescription);
         value = (TextView) findViewById(R.id.txtValue);
@@ -170,11 +173,11 @@ public class StartScreen extends AppCompatActivity {
                 public void run() {
                     if(number == 0){
                         description.setText(bitcoinList.get(numberHolder).getDescription());
-                        value.setText(bitcoinList.get(numberHolder).getValue());
+                        value.setText("$" + bitcoinList.get(numberHolder).getValue());
                         lastUpdated.setText("Last updated\n" + bitcoinList.get(numberHolder).getLastUpdated());
                     }else if(number == 1){
                         description.setText(bitcoinList.get(numberHolder).getDescription());
-                        value.setText(bitcoinList.get(numberHolder).getValue());
+                        value.setText("€" + bitcoinList.get(numberHolder).getValue());
                         lastUpdated.setText("Last updated\n" + bitcoinList.get(numberHolder).getLastUpdated());
                     }else{
                         System.out.println("No number matches the description");
@@ -237,6 +240,30 @@ public class StartScreen extends AppCompatActivity {
                     // Value displayed in euros.
                     updateLabels(1);
                     currencyChecker = false;
+                }
+            }
+        });
+    }
+
+    public void startBackgroundService(){
+        backgroundService = (Button) findViewById(R.id.btnBackgroundService);
+        backgroundService.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(bitcoinList.size() > 0){
+                    bitcoin = bitcoinList.get(numberHolder);
+
+                    // Starting service to run app in background
+                    Intent intent = new Intent(view.getContext(), BackgroundService.class);
+                    if(bitcoin != null){
+                        // Sending current bitcoin currency to the service.
+                        intent.putExtra("bitcoinValue", bitcoin.getValue());
+                        startService(intent);
+                        }else{
+                            System.out.println("Bitcoin is null");
+                        }
+                    }else{
+                    System.out.println("There are 0 items.");
                 }
             }
         });

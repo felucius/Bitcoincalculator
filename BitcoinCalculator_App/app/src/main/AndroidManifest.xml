@@ -25,6 +25,11 @@
             android:name=".Screen.CalculatorScreen"
             android:label="@string/title_activity_calculator_screen"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+
+        <service
+            android:name=".Domain.BackgroundService"
+            android:exported="false"
+            />
     </application>
 
 </manifest>

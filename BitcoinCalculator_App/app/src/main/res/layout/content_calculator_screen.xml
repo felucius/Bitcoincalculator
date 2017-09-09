@@ -65,6 +65,7 @@
             android:inputType="number"
             android:textAlignment="center"
             android:textColor="@android:color/holo_orange_dark"
+            android:textColorLink="@android:color/black"
             android:textSize="18sp"
             android:textStyle="bold" />
 
@@ -90,6 +91,7 @@
             android:inputType="number"
             android:textAlignment="center"
             android:textColor="@android:color/holo_orange_dark"
+            android:textColorLink="@android:color/black"
             android:textStyle="bold" />
 
         <TextView
@@ -115,6 +117,7 @@
             android:textAlignment="center"
             android:textAllCaps="true"
             android:textColor="@android:color/holo_orange_dark"
+            android:textColorLink="@android:color/black"
             android:textStyle="bold" />
 
         <View

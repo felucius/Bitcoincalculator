@@ -91,9 +91,16 @@ public class APICalls {
             String valueEUR = bitcoinCurrencyEUR.getString("rate");
             String descriptionEUR = bitcoinCurrencyEUR.getString("description");
 
-            this.bitcoin = new Bitcoin(lastUpdated, currencyUSD, valueUSD, descriptionUSD);
+            // Removing the comma from the price
+            String concatValueUSD = valueUSD.replace(",", ".");
+            String concatValueEUR = valueEUR.replace(",", ".");
+            // Removing the last 4 digits of the value string. Last 4 digits are in cents and are not necessary.
+            String actualValueUSD = concatValueUSD.substring(0, concatValueUSD.length() - 5);
+            String actualValueEUR = concatValueEUR.substring(0, concatValueEUR.length() - 5);
+
+            this.bitcoin = new Bitcoin(lastUpdated, currencyUSD, actualValueUSD, descriptionUSD);
             bitcoinList.add(bitcoin);
-            this.bitcoin = new Bitcoin(lastUpdated, curencyEUR, valueEUR, descriptionEUR);
+            this.bitcoin = new Bitcoin(lastUpdated, curencyEUR, actualValueEUR, descriptionEUR);
             bitcoinList.add(bitcoin);
 
             return bitcoinList;

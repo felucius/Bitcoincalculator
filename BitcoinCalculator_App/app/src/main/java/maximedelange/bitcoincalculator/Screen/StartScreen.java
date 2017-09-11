@@ -220,8 +220,19 @@ public class StartScreen extends AppCompatActivity {
         btnGoTo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(), CalculatorScreen.class);
-                startActivity(intent);
+            if(bitcoinList.size() > 0){
+                bitcoin = bitcoinList.get(numberHolder);
+
+                if(bitcoin != null){
+                    Intent intent = new Intent(view.getContext(), CalculatorScreen.class);
+                    intent.putExtra("bitcoinValue", bitcoin.getValue());
+                    startActivity(intent);
+                }else{
+                    System.out.println("Bitcoin object is null.");
+                }
+            }else{
+                System.out.println("List size is empty.");
+            }
             }
         });
     }
@@ -254,7 +265,7 @@ public class StartScreen extends AppCompatActivity {
                     bitcoin = bitcoinList.get(numberHolder);
 
                     // Starting service to run app in background
-                    Intent intent = new Intent(view.getContext(), BackgroundService.class);
+                    Intent intent = new Intent(view.getContext(), CalculatorScreen.class);
                     if(bitcoin != null){
                         // Sending current bitcoin currency to the service.
                         intent.putExtra("bitcoinValue", bitcoin.getValue());

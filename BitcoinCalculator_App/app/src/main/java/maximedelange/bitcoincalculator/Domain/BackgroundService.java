@@ -9,13 +9,11 @@ import android.os.IBinder;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
-import android.widget.Toast;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
 import maximedelange.bitcoincalculator.R;
-import maximedelange.bitcoincalculator.Screen.StartScreen;
 
 /**
  * Created by M on 9/8/2017.
@@ -36,6 +34,8 @@ public class BackgroundService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startID){
         final String bitcoinValue = intent.getStringExtra("bitcoinValue");
+        final Integer maximumValue = Integer.valueOf(intent.getStringExtra("maximumValue"));
+        final Integer minimumValue = Integer.valueOf(intent.getStringExtra("minimumValue"));
         final Integer bitcoin = Integer.valueOf(bitcoinValue);
 
         // Running timer to show a message to the user repetetive.
@@ -46,7 +46,9 @@ public class BackgroundService extends Service {
                 public void dispatchMessage(Message msg) {
                     super.dispatchMessage(msg);
                     // Checking if bitcoin value is higher than a certain amount.
-                    if(bitcoin > 4000){
+                    if(bitcoin > maximumValue){
+                        createNotification(bitcoinValue);
+                    }else if(bitcoin < minimumValue){
                         createNotification(bitcoinValue);
                     }
                 }

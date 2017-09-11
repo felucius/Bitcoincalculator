@@ -30,7 +30,7 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@android:color/holo_orange_dark"
-            android:text="Mining calculator"
+            android:text="Price watcher"
             android:textAlignment="center"
             android:textAllCaps="true"
             android:textColor="@android:color/black"
@@ -48,7 +48,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Hashing power"
+            android:text="Maximum value"
             android:textAlignment="center"
             android:textAllCaps="true"
             android:textColor="@android:color/holo_orange_dark"
@@ -56,7 +56,7 @@
             android:textStyle="bold" />
 
         <EditText
-            android:id="@+id/txtHashingPower"
+            android:id="@+id/txtMaximumValue"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -74,7 +74,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Power consumption (w)"
+            android:text="Minimum value"
             android:textAlignment="center"
             android:textAllCaps="true"
             android:textColor="@android:color/holo_orange_dark"
@@ -82,7 +82,7 @@
             android:textStyle="bold" />
 
         <EditText
-            android:id="@+id/txtPowerConsumption"
+            android:id="@+id/txtMinimumValue"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -94,32 +94,6 @@
             android:textColorLink="@android:color/black"
             android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/textView8"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Cost per kW/h"
-            android:textAlignment="center"
-            android:textAllCaps="true"
-            android:textColor="@android:color/holo_orange_dark"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-
-        <EditText
-            android:id="@+id/editText3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:ems="10"
-            android:hint="0.15"
-            android:inputType="number"
-            android:textAlignment="center"
-            android:textAllCaps="true"
-            android:textColor="@android:color/holo_orange_dark"
-            android:textColorLink="@android:color/black"
-            android:textStyle="bold" />
-
         <View
             android:id="@+id/view1"
             android:layout_width="match_parent"
@@ -127,11 +101,11 @@
             android:background="@android:color/black"/>
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/btnStartService"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:color/holo_orange_dark"
-            android:text="Calculate"
+            android:text="Set price watcher"
             android:textAlignment="center"
             android:textSize="18sp"
             android:textStyle="bold" />

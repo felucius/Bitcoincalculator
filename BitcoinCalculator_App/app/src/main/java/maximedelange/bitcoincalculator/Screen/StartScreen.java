@@ -48,7 +48,6 @@ public class StartScreen extends AppCompatActivity {
     private TextView lastUpdated = null;
     private Button btnGoTo = null;
     private Button showCurrencies = null;
-    private Button backgroundService = null;
     private ToggleButton toggleCurrency = null;
 
     // Domain
@@ -56,7 +55,6 @@ public class StartScreen extends AppCompatActivity {
     private Bitcoin bitcoin = null;
     private List<Bitcoin> bitcoinList = null;
     private boolean currencyChecker = false;
-    private List<String> bitcoinCurrencies = null;
     private Integer numberHolder = 0;
 
     @Override
@@ -73,7 +71,6 @@ public class StartScreen extends AppCompatActivity {
         updateMethodCall();
         retrieveBitcoinCurrencies();
         toggleCurrentCurrency();
-        startBackgroundService();
     }
 
     @Override
@@ -251,30 +248,6 @@ public class StartScreen extends AppCompatActivity {
                     // Value displayed in euros.
                     updateLabels(1);
                     currencyChecker = false;
-                }
-            }
-        });
-    }
-
-    public void startBackgroundService(){
-        backgroundService = (Button) findViewById(R.id.btnBackgroundService);
-        backgroundService.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(bitcoinList.size() > 0){
-                    bitcoin = bitcoinList.get(numberHolder);
-
-                    // Starting service to run app in background
-                    Intent intent = new Intent(view.getContext(), CalculatorScreen.class);
-                    if(bitcoin != null){
-                        // Sending current bitcoin currency to the service.
-                        intent.putExtra("bitcoinValue", bitcoin.getValue());
-                        startService(intent);
-                        }else{
-                            System.out.println("Bitcoin is null");
-                        }
-                    }else{
-                    System.out.println("There are 0 items.");
                 }
             }
         });

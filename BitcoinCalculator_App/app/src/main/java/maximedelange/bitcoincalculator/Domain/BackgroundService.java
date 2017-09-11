@@ -9,6 +9,7 @@ import android.os.IBinder;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
+import android.widget.Toast;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -51,6 +52,7 @@ public class BackgroundService extends Service {
                     }else if(bitcoin < minimumValue){
                         createNotification(bitcoinValue);
                     }
+                    createToastMessage("Service started and running in background...");
                 }
             };
             public void run() {
@@ -74,5 +76,9 @@ public class BackgroundService extends Service {
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(0, notification.build());
+    }
+
+    private void createToastMessage(String message){
+        Toast.makeText(context, message, Toast.LENGTH_LONG).show();
     }
 }
